@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tic Tac Toe | Cyberpunk Edition</title>
+  <meta name="description" content="A stunning cyberpunk-themed 2-player Tic Tac Toe game with neon effects, sound, and smooth animations." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Animated Background Particles -->
+  <div class="bg-grid"></div>
+  <div class="scanline"></div>
+
+  <div class="container">
+
+    <!-- Header -->
+    <header class="game-header">
+      <h1 class="game-title">
+        <span class="title-x neon-x">X</span>
+        <span class="title-text">TIC TAC TOE</span>
+        <span class="title-o neon-o">O</span>
+      </h1>
+      <p class="game-subtitle">CYBERPUNK EDITION</p>
+    </header>
+
+    <!-- Player Name Setup -->
+    <div id="setup-screen" class="setup-screen">
+      <h2 class="setup-title">ENTER PLAYER NAMES</h2>
+      <div class="player-inputs">
+        <div class="input-group">
+          <label class="input-label neon-x" for="player1-name">⚡ PLAYER X</label>
+          <input
+            type="text"
+            id="player1-name"
+            class="player-input input-x"
+            placeholder="Enter name..."
+            maxlength="12"
+          />
+        </div>
+        <div class="vs-badge">VS</div>
+        <div class="input-group">
+          <label class="input-label neon-o" for="player2-name">🔮 PLAYER O</label>
+          <input
+            type="text"
+            id="player2-name"
+            class="player-input input-o"
+            placeholder="Enter name..."
+            maxlength="12"
+          />
+        </div>
+      </div>
+      <button id="start-btn" class="btn btn-start" onclick="startGame()">
+        <span class="btn-text">START GAME</span>
+        <span class="btn-glow"></span>
+      </button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="game-screen hidden">
+
+      <!-- Score Board -->
+      <div class="scoreboard">
+        <div id="score-x" class="score-card score-x">
+          <div class="score-player-name" id="display-name-x">PLAYER X</div>
+          <div class="score-symbol neon-x">X</div>
+          <div class="score-value" id="score-value-x">0</div>
+        </div>
+        <div class="score-divider">
+          <div class="draw-label">DRAWS</div>
+          <div class="draw-value" id="score-draws">0</div>
+        </div>
+        <div id="score-o" class="score-card score-o">
+          <div class="score-player-name" id="display-name-o">PLAYER O</div>
+          <div class="score-symbol neon-o">O</div>
+          <div class="score-value" id="score-value-o">0</div>
+        </div>
+      </div>
+
+      <!-- Turn Indicator -->
+      <div class="turn-indicator">
+        <div id="turn-text" class="turn-text">
+          <span id="current-player-name">PLAYER X</span>'s TURN
+          <span id="turn-symbol" class="neon-x">⚡</span>
+        </div>
+        <div class="turn-bar">
+          <div id="turn-bar-fill" class="turn-bar-fill turn-bar-x"></div>
+        </div>
+      </div>
+
+      <!-- Game Board -->
+      <div class="board-wrapper">
+        <div id="game-board" class="game-board">
+          <div class="cell" id="cell-0" onclick="makeMove(0)" role="button" aria-label="Cell 1"></div>
+          <div class="cell" id="cell-1" onclick="makeMove(1)" role="button" aria-label="Cell 2"></div>
+          <div class="cell" id="cell-2" onclick="makeMove(2)" role="button" aria-label="Cell 3"></div>
+          <div class="cell" id="cell-3" onclick="makeMove(3)" role="button" aria-label="Cell 4"></div>
+          <div class="cell" id="cell-4" onclick="makeMove(4)" role="button" aria-label="Cell 5"></div>
+          <div class="cell" id="cell-5" onclick="makeMove(5)" role="button" aria-label="Cell 6"></div>
+          <div class="cell" id="cell-6" onclick="makeMove(6)" role="button" aria-label="Cell 7"></div>
+          <div class="cell" id="cell-7" onclick="makeMove(7)" role="button" aria-label="Cell 8"></div>
+          <div class="cell" id="cell-8" onclick="makeMove(8)" role="button" aria-label="Cell 9"></div>
+        </div>
+        <!-- Win Line Overlay -->
+        <svg id="win-line-svg" class="win-line-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+          <line id="win-line" x1="0" y1="0" x2="0" y2="0" class="win-line-path" />
+        </svg>
+      </div>
+
+      <!-- Game Controls -->
+      <div class="game-controls">
+        <button id="reset-btn" class="btn btn-reset" onclick="resetGame()">
+          <span class="btn-icon">↺</span> RESET ROUND
+        </button>
+        <button id="new-game-btn" class="btn btn-new" onclick="newGame()">
+          <span class="btn-icon">⚡</span> NEW GAME
+        </button>
+      </div>
+    </div>
+
+    <!-- Result Modal -->
+    <div id="result-modal" class="modal-overlay hidden">
+      <div class="modal-box" id="modal-box">
+        <div class="modal-particles" id="modal-particles"></div>
+        <div class="modal-icon" id="modal-icon">🏆</div>
+        <h2 class="modal-title" id="modal-title">WINNER!</h2>
+        <p class="modal-subtitle" id="modal-subtitle">Player X Wins!</p>
+        <div class="modal-actions">
+          <button class="btn btn-next" onclick="nextRound()">NEXT ROUND ▶</button>
+          <button class="btn btn-reset-modal" onclick="newGame()">NEW GAME ↺</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
